@@ -1,5 +1,7 @@
 # PeachSanitize
 
+[![PSGallery Version](https://img.shields.io/powershellgallery/v/PeachSanitize)](https://www.powershellgallery.com/packages/PeachSanitize)
+[![PSGallery Downloads](https://img.shields.io/powershellgallery/dt/PeachSanitize)](https://www.powershellgallery.com/packages/PeachSanitize)
 ![PSScriptAnalyzer](https://img.shields.io/badge/PSScriptAnalyzer-0%20findings-brightgreen)
 ![Pester](https://img.shields.io/badge/Pester-76%2F76%20passing-brightgreen)
 ![PowerShell](https://img.shields.io/badge/PowerShell-5.1%20%7C%207%2B-blue)
