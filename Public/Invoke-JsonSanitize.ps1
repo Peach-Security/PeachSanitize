@@ -114,8 +114,7 @@ function Invoke-JsonSanitize {
 
                 $fileInfo = [System.IO.FileInfo]::new($fullPath)
                 if ($fileInfo.Length -gt 1MB) {
-                    $PSCmdlet.WriteWarning(
-                        'Large file detected — processing may be slow.')
+                    $PSCmdlet.WriteWarning('Large file detected - processing may be slow.')
                 }
 
                 $rawJson = [System.IO.File]::ReadAllText($fullPath, [System.Text.Encoding]::UTF8)
@@ -156,7 +155,7 @@ function Invoke-JsonSanitize {
                 return
             }
 
-            $outputJson = $sanitized | ConvertTo-Json -Depth 100 -Compress:$false
+            $outputJson = $sanitized | ConvertTo-Json -Depth 100
 
             if ($OutFile) {
                 if ($PSCmdlet.ShouldProcess($OutFile, 'Write sanitized JSON')) {
@@ -185,8 +184,7 @@ function Invoke-JsonSanitize {
                 $outputJson
             }
         }
-        catch [System.Management.Automation.RuntimeException] {
-            # Re-throw terminating errors that originate inside the function
+        catch {
             throw
         }
     }

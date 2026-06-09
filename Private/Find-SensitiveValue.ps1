@@ -1,3 +1,9 @@
+# Compiled once at module load — matched case-insensitively on every leaf key name
+$script:SensitiveKeyPattern = [System.Text.RegularExpressions.Regex]::new(
+    '^.*(password|secret|token|key|apikey|api_key|auth|credential|private).*$',
+    ([System.Text.RegularExpressions.RegexOptions]::IgnoreCase -bor [System.Text.RegularExpressions.RegexOptions]::Compiled)
+)
+
 function Find-SensitiveValue {
     [CmdletBinding()]
     [OutputType([PSCustomObject])]
@@ -12,10 +18,6 @@ function Find-SensitiveValue {
         [string] $KeyName
     )
 
-    # Null, boolean, and numeric values are never sensitive on their own;
-    # key-name heuristic is the only route for non-string scalars.
-    $sensitiveKeyPattern = '^.*(password|secret|token|key|apikey|api_key|auth|credential|private).*$'
-
     if ($null -eq $Value -or $Value -is [bool]) {
         return $null
     }
@@ -24,7 +26,7 @@ function Find-SensitiveValue {
     $stringVal     = if ($isStringValue) { $Value } else { [string]$Value }
 
     # --- Key-name heuristic (highest priority) ---
-    if ($KeyName -match $sensitiveKeyPattern) {
+    if ($script:SensitiveKeyPattern.IsMatch($KeyName)) {
         return [PSCustomObject]@{
             DetectedType = 'KeyNameMatch'
             MatchedValue = $stringVal

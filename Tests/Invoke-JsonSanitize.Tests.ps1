@@ -14,7 +14,7 @@ Describe 'Invoke-JsonSanitize — input validation' {
     }
 
     It 'throws a terminating error for an empty string' {
-        { '' | Invoke-JsonSanitize } | Should -Throw
+        { Invoke-JsonSanitize -InputObject '' } | Should -Throw
     }
 
     It 'throws when -Path points to a non-existent file' {

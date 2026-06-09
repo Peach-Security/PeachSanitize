@@ -10,8 +10,8 @@ function New-FakeReplacement {
         [string] $OriginalValue
     )
 
-    # Seed with a new GUID on each call so outputs are unpredictable
-    $rng = [System.Random]::new([System.Math]::Abs([System.BitConverter]::ToInt32([System.Guid]::NewGuid().ToByteArray(), 0)))
+    # Mask the sign bit to avoid Math.Abs(Int32.MinValue) overflow
+    $rng = [System.Random]::new([System.BitConverter]::ToInt32([System.Guid]::NewGuid().ToByteArray(), 0) -band [System.Int32]::MaxValue)
 
     switch ($DetectedType) {
         'Email'            { return New-FakeEmail -Rng $rng }
