@@ -5,7 +5,7 @@ BeforeAll {
 
 Describe 'Find-SensitiveValue' {
 
-    Context 'Passthrough — values that should never be flagged' {
+    Context 'Passthrough - values that should never be flagged' {
         It 'returns $null for a null value' {
             Find-SensitiveValue -Value $null -KeyName 'field' | Should -BeNullOrEmpty
         }
@@ -132,7 +132,7 @@ Describe 'Find-SensitiveValue' {
         }
 
         It 'does not flag a number that fails Luhn' {
-            # 4111111111111112 is one digit off from the valid 4111111111111111 — fails Luhn
+            # 4111111111111112 is one digit off from the valid 4111111111111111 - fails Luhn
             Find-SensitiveValue -Value '4111111111111112' -KeyName 'field' | Should -BeNullOrEmpty
         }
     }

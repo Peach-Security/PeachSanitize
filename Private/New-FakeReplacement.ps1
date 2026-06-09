@@ -1,4 +1,6 @@
 function New-FakeReplacement {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '',
+        Justification = 'Pure in-memory value generator; performs no system state change.')]
     [CmdletBinding()]
     [OutputType([string])]
     param(
@@ -19,7 +21,7 @@ function New-FakeReplacement {
         'PhoneNumber'      { return '(555) 000-{0:D4}' -f $rng.Next(0, 9999) }
         'SSN'              { return '000-00-{0:D4}' -f $rng.Next(0, 9999) }
         'CreditCard'       { return '4111111111111{0:D4}' -f $rng.Next(1000, 9999) }
-        'BearerToken'      { return New-FakeToken -OriginalValue $OriginalValue -Rng $rng }
+        'BearerToken'      { return New-FakeToken -Rng $rng }
         'CredentialUrl'    { return New-FakeCredentialUrl -OriginalValue $OriginalValue -Rng $rng }
         'Hostname'         { return 'internal-host-{0}.local' -f (New-RandomString -Charset 'abcdefghijklmnopqrstuvwxyz0123456789' -Length 6 -Rng $rng) }
         'HighEntropyString'{ return New-FakeApiKey -OriginalValue $OriginalValue -Rng $rng }
@@ -29,6 +31,8 @@ function New-FakeReplacement {
 }
 
 function New-FakeEmail {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '',
+        Justification = 'Pure in-memory value generator; performs no system state change.')]
     [CmdletBinding()]
     [OutputType([string])]
     param([Parameter(Mandatory)] [System.Random] $Rng)
@@ -48,6 +52,8 @@ function New-FakeEmail {
 }
 
 function New-FakeIp {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '',
+        Justification = 'Pure in-memory value generator; performs no system state change.')]
     [CmdletBinding()]
     [OutputType([string])]
     param([Parameter(Mandatory)] [System.Random] $Rng)
@@ -56,10 +62,11 @@ function New-FakeIp {
 }
 
 function New-FakeToken {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '',
+        Justification = 'Pure in-memory value generator; performs no system state change.')]
     [CmdletBinding()]
     [OutputType([string])]
     param(
-        [Parameter(Mandatory)] [string]       $OriginalValue,
         [Parameter(Mandatory)] [System.Random] $Rng
     )
 
@@ -68,6 +75,8 @@ function New-FakeToken {
 }
 
 function New-FakeCredentialUrl {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '',
+        Justification = 'Pure in-memory value generator; performs no system state change.')]
     [CmdletBinding()]
     [OutputType([string])]
     param(
@@ -87,6 +96,8 @@ function New-FakeCredentialUrl {
 }
 
 function New-FakeApiKey {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '',
+        Justification = 'Pure in-memory value generator; performs no system state change.')]
     [CmdletBinding()]
     [OutputType([string])]
     param(
@@ -113,6 +124,8 @@ function Resolve-ApiKeyCharset {
 }
 
 function New-RandomString {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '',
+        Justification = 'Pure in-memory value generator; performs no system state change.')]
     [CmdletBinding()]
     [OutputType([string])]
     param(

@@ -4,8 +4,9 @@
     Author               = 'Peach Security'
     CompanyName          = 'Peach Security'
     Copyright            = '(c) 2026 Peach Security. All rights reserved.'
-    Description          = 'Sanitize sensitive data from JSON before pasting into AI tools. Runs entirely locally — no network calls, no cloud upload.'
+    Description          = 'Sanitize sensitive data from JSON before pasting into AI tools. Runs entirely locally - no network calls, no cloud upload.'
     PowerShellVersion    = '5.1'
+    CompatiblePSEditions = @('Desktop', 'Core')
 
     RootModule           = 'PeachSanitize.psm1'
     FunctionsToExport    = @('Invoke-JsonSanitize')

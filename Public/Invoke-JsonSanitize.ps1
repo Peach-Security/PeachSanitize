@@ -38,7 +38,7 @@ function Invoke-JsonSanitize {
     .EXAMPLE
         Invoke-JsonSanitize -Path ./payload.json -DryRun
 
-        Shows a preview table of every replacement that would be made — no changes applied.
+        Shows a preview table of every replacement that would be made. No changes applied.
 
     .EXAMPLE
         Invoke-JsonSanitize -Path ./payload.json -OutFile ./payload.sanitized.json
@@ -99,93 +99,87 @@ function Invoke-JsonSanitize {
     }
 
     end {
-        try {
-            # Resolve the raw JSON string
-            if ($PSCmdlet.ParameterSetName -eq 'File') {
-                $fullPath = $PSCmdlet.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
+        # Resolve the raw JSON string from a file or the accumulated pipeline input.
+        if ($PSCmdlet.ParameterSetName -eq 'File') {
+            $fullPath = $PSCmdlet.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
 
-                if (-not [System.IO.File]::Exists($fullPath)) {
-                    $ex = [System.IO.FileNotFoundException]::new(
-                        "File not found: '$fullPath'.")
-                    $PSCmdlet.ThrowTerminatingError(
-                        [System.Management.Automation.ErrorRecord]::new(
-                            $ex, 'FileNotFound', [System.Management.Automation.ErrorCategory]::ObjectNotFound, $fullPath))
-                }
-
-                $fileInfo = [System.IO.FileInfo]::new($fullPath)
-                if ($fileInfo.Length -gt 1MB) {
-                    $PSCmdlet.WriteWarning('Large file detected - processing may be slow.')
-                }
-
-                $rawJson = [System.IO.File]::ReadAllText($fullPath, [System.Text.Encoding]::UTF8)
-            }
-            else {
-                $rawJson = $jsonChunks -join ''
-            }
-
-            # Validate JSON
-            $parsed = $null
-            try {
-                $parsed = $rawJson | ConvertFrom-Json
-            }
-            catch {
-                $ex = [System.ArgumentException]::new(
-                    'Input is not valid JSON. Verify with ConvertFrom-Json before running.')
+            if (-not [System.IO.File]::Exists($fullPath)) {
+                $ex = [System.IO.FileNotFoundException]::new("File not found: '$fullPath'.")
                 $PSCmdlet.ThrowTerminatingError(
                     [System.Management.Automation.ErrorRecord]::new(
-                        $ex, 'InvalidJson', [System.Management.Automation.ErrorCategory]::InvalidData, $rawJson))
+                        $ex, 'FileNotFound', [System.Management.Automation.ErrorCategory]::ObjectNotFound, $fullPath))
             }
 
-            # Walk the object tree
-            $walkResult = Invoke-ValueReplacement -InputObject $parsed -KeyPath ''
-            $findings   = $walkResult.Findings
-            $sanitized  = $walkResult.Object
-
-            Write-Verbose ('{0} sensitive value(s) detected across {1} type(s).' -f
-                $findings.Count,
-                ($findings | Select-Object -ExpandProperty DetectedType -Unique | Measure-Object).Count)
-
-            # DryRun — table only, no output
-            if ($DryRun) {
-                if ($findings.Count -eq 0) {
-                    Write-Host 'No sensitive values detected.'
-                    return
-                }
-                $findings | Format-Table -Property KeyPath, DetectedType, OriginalValue, ProposedReplacement -AutoSize | Out-Host
-                return
+            if (([System.IO.FileInfo]::new($fullPath)).Length -gt 1MB) {
+                $PSCmdlet.WriteWarning('Large file detected - processing may be slow.')
             }
 
-            $outputJson = $sanitized | ConvertTo-Json -Depth 100
+            $rawJson = [System.IO.File]::ReadAllText($fullPath, [System.Text.Encoding]::UTF8)
+        }
+        else {
+            $rawJson = $jsonChunks -join ''
+        }
 
-            if ($OutFile) {
-                if ($PSCmdlet.ShouldProcess($OutFile, 'Write sanitized JSON')) {
-                    $outResolved = $PSCmdlet.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutFile)
-                    try {
-                        [System.IO.File]::WriteAllText($outResolved, $outputJson, [System.Text.Encoding]::UTF8)
-                        Write-Verbose "Sanitized JSON written to: $outResolved"
-                    }
-                    catch [System.UnauthorizedAccessException] {
-                        $ex = [System.UnauthorizedAccessException]::new(
-                            "Cannot write to '$outResolved' - access denied.")
-                        $PSCmdlet.ThrowTerminatingError(
-                            [System.Management.Automation.ErrorRecord]::new(
-                                $ex, 'OutFileAccessDenied', [System.Management.Automation.ErrorCategory]::PermissionDenied, $outResolved))
-                    }
-                    catch [System.IO.IOException] {
-                        $ex = [System.IO.IOException]::new(
-                            "Failed to write output file '$outResolved': $($_.Exception.Message)")
-                        $PSCmdlet.ThrowTerminatingError(
-                            [System.Management.Automation.ErrorRecord]::new(
-                                $ex, 'OutFileWriteError', [System.Management.Automation.ErrorCategory]::WriteError, $outResolved))
-                    }
-                }
-            }
-            else {
-                $outputJson
-            }
+        # Validate JSON.
+        try {
+            $parsed = $rawJson | ConvertFrom-Json
         }
         catch {
-            throw
+            # Deliberately omit the raw payload from the error record: it may contain
+            # the very secrets this tool exists to protect, and ErrorRecords can be logged.
+            $ex = [System.ArgumentException]::new(
+                'Input is not valid JSON. Verify with ConvertFrom-Json before running.')
+            $PSCmdlet.ThrowTerminatingError(
+                [System.Management.Automation.ErrorRecord]::new(
+                    $ex, 'InvalidJson', [System.Management.Automation.ErrorCategory]::InvalidData, $null))
+        }
+
+        # Walk the object tree and replace sensitive leaf values.
+        $walkResult = Invoke-ValueReplacement -InputObject $parsed -KeyPath ''
+        $findings   = $walkResult.Findings
+        $sanitized  = $walkResult.Object
+
+        Write-Verbose ('{0} sensitive value(s) detected across {1} type(s).' -f
+            $findings.Count,
+            ($findings | Select-Object -ExpandProperty DetectedType -Unique | Measure-Object).Count)
+
+        # DryRun: render a preview table to the host only, change nothing.
+        if ($DryRun) {
+            if ($findings.Count -eq 0) {
+                'No sensitive values detected.' | Out-Host
+                return
+            }
+            $findings |
+                Format-Table -Property KeyPath, DetectedType, OriginalValue, ProposedReplacement -AutoSize |
+                Out-Host
+            return
+        }
+
+        $outputJson = $sanitized | ConvertTo-Json -Depth 100
+
+        if (-not $OutFile) {
+            return $outputJson
+        }
+
+        if ($PSCmdlet.ShouldProcess($OutFile, 'Write sanitized JSON')) {
+            $outResolved = $PSCmdlet.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutFile)
+            try {
+                [System.IO.File]::WriteAllText($outResolved, $outputJson, [System.Text.Encoding]::UTF8)
+                Write-Verbose "Sanitized JSON written to: $outResolved"
+            }
+            catch [System.UnauthorizedAccessException] {
+                $ex = [System.UnauthorizedAccessException]::new("Cannot write to '$outResolved' - access denied.")
+                $PSCmdlet.ThrowTerminatingError(
+                    [System.Management.Automation.ErrorRecord]::new(
+                        $ex, 'OutFileAccessDenied', [System.Management.Automation.ErrorCategory]::PermissionDenied, $outResolved))
+            }
+            catch [System.IO.IOException] {
+                $ex = [System.IO.IOException]::new(
+                    "Failed to write output file '$outResolved': $($_.Exception.Message)")
+                $PSCmdlet.ThrowTerminatingError(
+                    [System.Management.Automation.ErrorRecord]::new(
+                        $ex, 'OutFileWriteError', [System.Management.Automation.ErrorCategory]::WriteError, $outResolved))
+            }
         }
     }
 }

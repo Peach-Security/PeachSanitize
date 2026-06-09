@@ -1,4 +1,4 @@
-# Compiled once at module load — matched case-insensitively on every leaf key name
+# Compiled once at module load - matched case-insensitively on every leaf key name
 $script:SensitiveKeyPattern = [System.Text.RegularExpressions.Regex]::new(
     '^.*(password|secret|token|key|apikey|api_key|auth|credential|private).*$',
     ([System.Text.RegularExpressions.RegexOptions]::IgnoreCase -bor [System.Text.RegularExpressions.RegexOptions]::Compiled)
@@ -90,7 +90,7 @@ function Find-SensitiveValue {
         }
     }
 
-    # Credit card (Luhn-validated, 13–19 digits, optional spaces/dashes)
+    # Credit card (Luhn-validated, 13-19 digits, optional spaces/dashes)
     $ccDigits = $stringVal -replace '[\s\-]', ''
     if ($ccDigits -match '^\d{13,19}$' -and (Test-LuhnChecksum -Number $ccDigits)) {
         return [PSCustomObject]@{

@@ -98,7 +98,6 @@ Describe 'New-FakeReplacement' {
 
         It 'output differs from the original' {
             $original = 'a3f8c1e9d4b720e6f5a1'
-            $r = New-FakeReplacement -DetectedType 'HighEntropyString' -OriginalValue $original
             # Statistically near-impossible to collide; run a few times
             $results = 1..5 | ForEach-Object {
                 New-FakeReplacement -DetectedType 'HighEntropyString' -OriginalValue $original

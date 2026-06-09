@@ -70,7 +70,7 @@ function Invoke-WalkNode {
         return $output.ToArray()
     }
 
-    # Scalar — run detection
+    # Scalar - run detection
     $keyName = if ($KeyPath -match '\.?([^.\[\]]+)(\[\d+\])*$') { $Matches[1] } else { $KeyPath }
     $finding = Find-SensitiveValue -Value $Node -KeyName $keyName
 
