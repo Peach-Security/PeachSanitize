@@ -21,5 +21,13 @@ This project uses [Semantic Versioning](https://semver.org/).
 - `-OutFile` writes sanitized JSON to disk with proper error handling for access-denied and IO failures
 - Large file warning (> 1 MB) — proceeds after warning
 - Pester 5 test suite covering all detection types, replacement strategies, and end-to-end scenarios
-- PSScriptAnalyzer-clean — zero warnings on all `.ps1` files
 - Requires PowerShell 5.1+; tested on PowerShell 7 (Windows)
+
+### Quality
+
+- ✅ **PSScriptAnalyzer: 0 findings** (Error, Warning, and Information severities, all files)
+- ✅ **Pester: 76/76 tests passing**
+- ✅ **Test-ModuleManifest: clean** (`Desktop` and `Core` editions)
+- Security: invalid-JSON errors never embed the raw payload (no secret leakage into error records / logs)
+- Cross-platform module loading via `Join-Path` (verified for PowerShell 7 on non-Windows)
+- ASCII-only source for PowerShell 5.1 encoding safety

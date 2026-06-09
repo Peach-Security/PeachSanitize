@@ -1,5 +1,10 @@
 # PeachSanitize
 
+![PSScriptAnalyzer](https://img.shields.io/badge/PSScriptAnalyzer-0%20findings-brightgreen)
+![Pester](https://img.shields.io/badge/Pester-76%2F76%20passing-brightgreen)
+![PowerShell](https://img.shields.io/badge/PowerShell-5.1%20%7C%207%2B-blue)
+![License](https://img.shields.io/badge/License-MIT-yellow)
+
 A PowerShell module that strips sensitive data from JSON payloads before you paste them into AI tools like ChatGPT or Claude.
 
 Runs entirely locally. No network calls. No cloud upload. One command.
