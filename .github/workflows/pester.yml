@@ -1,0 +1,65 @@
+name: Pester Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: PowerShell ${{ matrix.powershell }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            powershell: '5.1'
+          - os: windows-latest
+            powershell: '7'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use PowerShell 7
+        if: matrix.powershell == '7'
+        uses: actions/setup-dotnet@v4
+
+      - name: Install Pester
+        shell: pwsh
+        run: |
+          Install-Module Pester -MinimumVersion 5.0.0 -Force -SkipPublisherCheck -Scope CurrentUser
+
+      - name: Validate module manifest
+        shell: pwsh
+        run: |
+          $result = Test-ModuleManifest -Path ./PeachSanitize.psd1
+          Write-Host "Module: $($result.Name) v$($result.Version)"
+
+      - name: Run Pester tests
+        shell: pwsh
+        run: |
+          $config = New-PesterConfiguration
+          $config.Run.Path = './Tests'
+          $config.Output.Verbosity = 'Detailed'
+          $config.TestResult.Enabled = $true
+          $config.TestResult.OutputPath = 'TestResults/pester-results.xml'
+          $config.TestResult.OutputFormat = 'NUnitXml'
+
+          New-Item -ItemType Directory -Path TestResults -Force | Out-Null
+          $result = Invoke-Pester -Configuration $config
+
+          if ($result.FailedCount -gt 0) {
+            Write-Error "$($result.FailedCount) test(s) failed."
+            exit 1
+          }
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pester-results-${{ matrix.os }}-ps${{ matrix.powershell }}
+          path: TestResults/

@@ -1,0 +1,32 @@
+{
+  "siteId": "site-chicago-01",
+  "collectedAt": "2026-06-07T06:00:00Z",
+  "devices": [
+    {
+      "hostname": "dc01.corp.clientco.local",
+      "ip": "10.10.1.10",
+      "mac": "00:1A:2B:3C:4D:5E",
+      "role": "Domain Controller",
+      "os": "Windows Server 2022",
+      "online": true
+    },
+    {
+      "hostname": "fileserver02.corp.clientco.local",
+      "ip": "10.10.1.20",
+      "mac": "00:1A:2B:3C:4D:6F",
+      "role": "File Server",
+      "os": "Windows Server 2019",
+      "online": true
+    },
+    {
+      "hostname": "workstation-carol.clientco.local",
+      "ip": "10.10.2.105",
+      "mac": "00:1A:2B:3C:4D:7A",
+      "role": "Workstation",
+      "os": "Windows 11 Pro",
+      "online": false
+    }
+  ],
+  "snmpCommunity": "Cl13ntC0-pr1vate",
+  "monitoringKey": "mkey-f7a3d2e8b1c9f4a0e6b2d5c8f3a1e7b4"
+}

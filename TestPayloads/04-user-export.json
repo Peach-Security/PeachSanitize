@@ -1,0 +1,40 @@
+{
+  "exportDate": "2026-06-07",
+  "exportedBy": "admin@mspname.com",
+  "users": [
+    {
+      "id": 1001,
+      "firstName": "Carol",
+      "lastName": "Nguyen",
+      "email": "carol.nguyen@clientco.com",
+      "phone": "(415) 555-2234",
+      "ssn": "287-54-9132",
+      "role": "Finance Manager",
+      "active": true,
+      "lastLogin": "2026-06-06T08:14:00Z"
+    },
+    {
+      "id": 1002,
+      "firstName": "David",
+      "lastName": "Park",
+      "email": "david.park@clientco.com",
+      "phone": "(415) 555-3381",
+      "ssn": "391-72-8845",
+      "role": "IT Admin",
+      "active": true,
+      "lastLogin": "2026-06-07T07:55:00Z"
+    },
+    {
+      "id": 1003,
+      "firstName": "Eva",
+      "lastName": "Torres",
+      "email": "eva.torres@clientco.com",
+      "phone": "(415) 555-4490",
+      "ssn": "512-83-7761",
+      "role": "HR Director",
+      "active": false,
+      "lastLogin": null
+    }
+  ],
+  "totalCount": 3
+}

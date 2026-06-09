@@ -1,0 +1,13 @@
+{
+  "status": "success",
+  "requestId": "req-20240607-001",
+  "tenant": "Acme Corp",
+  "apiKey": "sk-a3f8c1e9d4b720e6f5a19e7c3b8d2f1e",
+  "endpoint": "https://api.acmecorp.com/v2/devices",
+  "responseTime": 142,
+  "data": {
+    "devices": 48,
+    "lastSync": "2026-06-07T14:22:00Z",
+    "adminContact": "alice.johnson@acmecorp.com"
+  }
+}

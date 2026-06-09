@@ -1,0 +1,18 @@
+{
+  "ticketId": 84291,
+  "subject": "Client VPN not connecting after firmware update",
+  "status": "In Progress",
+  "priority": "High",
+  "contact": {
+    "name": "Bob Martinez",
+    "email": "bob.martinez@clientco.com",
+    "phone": "(312) 555-9087",
+    "company": "ClientCo LLC"
+  },
+  "assignedTech": "jsmith@mspname.com",
+  "notes": "Client reported issue at 9am. Remote session initiated to 192.168.10.45. Firewall rule change may have blocked UDP 500. Checking with network team.",
+  "internalServer": "vpn-gw01.clientco.local",
+  "resolution": null,
+  "billable": true,
+  "hoursLogged": 1.5
+}

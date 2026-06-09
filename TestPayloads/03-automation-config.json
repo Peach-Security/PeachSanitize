@@ -1,0 +1,18 @@
+{
+  "integrationName": "M365 Backup Sync",
+  "enabled": true,
+  "schedule": "0 2 * * *",
+  "credentials": {
+    "clientId": "9b3e7f21-4a8c-4d91-b5e2-1f3c8d7e6a04",
+    "clientSecret": "Zq8~mN4xKpR2Lw7TvYs0BcDfHjGnEaOu",
+    "tenantId": "contoso.onmicrosoft.com",
+    "refreshToken": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBjb250b3NvLmNvbSIsImlhdCI6MTcxNzc3MDAwMH0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+  },
+  "destination": {
+    "type": "azure-blob",
+    "connectionString": "DefaultEndpointsProtocol=https;AccountName=mspbackups;AccountKey=dGVzdGtleWhlcmUxMjM0NTY3ODkwYWJjZGVmZ2hpams=;EndpointSuffix=core.windows.net",
+    "container": "client-backups"
+  },
+  "notifyOnFailure": "alerts@mspname.com",
+  "retryCount": 3
+}

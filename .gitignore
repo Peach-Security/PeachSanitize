@@ -1,0 +1,20 @@
+# PowerShell
+*.ps1xml
+*.pssc
+
+# Module packaging artifacts
+*.nupkg
+*.zip
+
+# Test output
+TestResults/
+*.xml
+
+# Editor / OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Local test payloads are included intentionally for contributor reference
+# If you add real client data here by mistake, remove it and rotate the credentials immediately

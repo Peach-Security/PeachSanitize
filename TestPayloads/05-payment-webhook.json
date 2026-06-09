@@ -1,0 +1,24 @@
+{
+  "eventType": "payment.captured",
+  "eventId": "evt-20260607-8821",
+  "timestamp": "2026-06-07T13:45:00Z",
+  "live": false,
+  "customer": {
+    "id": "cust-40291",
+    "name": "Frank Wilson",
+    "email": "frank.wilson@example.com",
+    "billingPhone": "+12025550173"
+  },
+  "payment": {
+    "amount": 29900,
+    "currency": "USD",
+    "method": "card",
+    "cardNumber": "4532015112830366",
+    "cardHolder": "FRANK WILSON",
+    "expiryMonth": 11,
+    "expiryYear": 2028,
+    "cvvVerified": true
+  },
+  "processorRef": "ch_3P9kQxLkdIwHu7ix0RiZ4T8v",
+  "webhookSecret": "whsec_d4e8f2a1b3c7e9f0a2b4c6d8e0f2a4b6"
+}
