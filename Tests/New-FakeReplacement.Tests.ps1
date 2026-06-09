@@ -57,9 +57,9 @@ Describe 'New-FakeReplacement' {
     }
 
     Context 'BearerToken' {
-        It 'returns a REDACTED-TOKEN placeholder' {
+        It 'returns a REDACTED-TOKEN placeholder with 8-char hex suffix' {
             $r = New-FakeReplacement -DetectedType 'BearerToken' -OriginalValue 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
-            $r | Should -Match '^\[REDACTED-TOKEN-[0-9a-f]{8}\]'
+            $r | Should -Match '^\[REDACTED-TOKEN-[0-9a-f]{8}\]$'
         }
     }
 

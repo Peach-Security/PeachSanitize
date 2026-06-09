@@ -131,8 +131,9 @@ Describe 'Find-SensitiveValue' {
             $r.DetectedType | Should -Be 'CreditCard'
         }
 
-        It 'does not flag an all-zeros number that fails Luhn' {
-            Find-SensitiveValue -Value '0000000000000000' -KeyName 'field' | Should -BeNullOrEmpty
+        It 'does not flag a number that fails Luhn' {
+            # 4111111111111112 is one digit off from the valid 4111111111111111 — fails Luhn
+            Find-SensitiveValue -Value '4111111111111112' -KeyName 'field' | Should -BeNullOrEmpty
         }
     }
 

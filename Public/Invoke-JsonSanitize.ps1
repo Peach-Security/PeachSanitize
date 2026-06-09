@@ -102,8 +102,7 @@ function Invoke-JsonSanitize {
         try {
             # Resolve the raw JSON string
             if ($PSCmdlet.ParameterSetName -eq 'File') {
-                $resolved = $PSCmdlet.SessionState.Path.GetResolvedPSPathFromPSPath($Path)
-                $fullPath = $resolved[0].ProviderPath
+                $fullPath = $PSCmdlet.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
 
                 if (-not [System.IO.File]::Exists($fullPath)) {
                     $ex = [System.IO.FileNotFoundException]::new(

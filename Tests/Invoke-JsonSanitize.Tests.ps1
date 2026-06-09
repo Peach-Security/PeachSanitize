@@ -10,7 +10,7 @@ AfterAll {
 Describe 'Invoke-JsonSanitize — input validation' {
 
     It 'throws a terminating error when input is not valid JSON' {
-        { 'not json at all' | Invoke-JsonSanitize } | Should -Throw -ErrorId 'InvalidJson'
+        { 'not json at all' | Invoke-JsonSanitize } | Should -Throw -ErrorId 'InvalidJson,Invoke-JsonSanitize'
     }
 
     It 'throws a terminating error for an empty string' {
@@ -18,7 +18,7 @@ Describe 'Invoke-JsonSanitize — input validation' {
     }
 
     It 'throws when -Path points to a non-existent file' {
-        { Invoke-JsonSanitize -Path 'C:\DoesNotExist\missing.json' } | Should -Throw -ErrorId 'FileNotFound'
+        { Invoke-JsonSanitize -Path 'C:\DoesNotExist\missing.json' } | Should -Throw -ErrorId 'FileNotFound,Invoke-JsonSanitize'
     }
 }
 

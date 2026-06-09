@@ -64,8 +64,7 @@ function New-FakeToken {
     )
 
     $suffix = New-RandomString -Charset 'abcdef0123456789' -Length 8 -Rng $Rng
-    $targetLen = [System.Math]::Max(16, [System.Math]::Min($OriginalValue.Length, 64))
-    return '[REDACTED-TOKEN-{0}]' -f $suffix.PadRight($targetLen - 18).Substring(0, [System.Math]::Max(0, $targetLen - 18))
+    return '[REDACTED-TOKEN-{0}]' -f $suffix
 }
 
 function New-FakeCredentialUrl {
