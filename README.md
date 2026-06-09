@@ -187,29 +187,6 @@ If you want that protection running continuously instead of one command at a tim
 
 ---
 
-## Publishing to PSGallery
-
-> For Peach Security internal use — Gilad publishes manually.
-
-**Prerequisites:**
-- A PSGallery API key from [powershellgallery.com](https://www.powershellgallery.com/account/apikeys)
-- PowerShell 5.1+
-
-**Steps:**
-
-```powershell
-# 1. Validate the manifest
-Test-ModuleManifest -Path .\PeachSanitize.psd1
-
-# 2. Dry run — confirms what would be published
-Publish-Module -Path . -NuGetApiKey $env:PSGALLERY_API_KEY -WhatIf
-
-# 3. Publish
-Publish-Module -Path . -NuGetApiKey $env:PSGALLERY_API_KEY
-```
-
-> The `TestPayloads/` folder is for local testing only. PSGallery packages everything in the module directory — consider removing it before publishing, or adding it to `.gitignore` and keeping it out of the module root.
-
 ---
 
 ## Running tests locally
